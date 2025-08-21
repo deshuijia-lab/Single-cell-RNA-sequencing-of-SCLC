@@ -7,7 +7,7 @@ This repository contains the code used to process and visualize single-cell RNA 
 
 **Fig1 & Extended data Fig1.R**
 
-This R script contains the code used to generate Fig. 1 and Extended Data Fig. 1, including: preprocessing of scRNA-seq data from human SCLC clinical samples; copy number variation analysis with inferCNV; UMAP visualization of all cells and tumor subsets; bubble plot visualization of selected gene expression; proportion analysis of clusters and cell types; and preprocessing/visualization for pySCENIC transcription factor analysis. 
+This R script contains the code used to generate Fig. 1 and Extended Data Fig. 1, including: preprocessing of scRNA-seq data from human SCLC clinical samples; copy number variation analysis with **inferCNV**; UMAP visualization of all cells and tumor subsets; bubble plot visualization of selected gene expression; proportion analysis of clusters and cell types; and preprocessing/visualization for **pySCENIC** transcription factor analysis. 
 
 **pyscenic analysis--Fig1c.sh**
 

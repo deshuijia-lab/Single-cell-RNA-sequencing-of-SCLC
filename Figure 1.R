@@ -171,12 +171,12 @@ infercnv_obj = infercnv::run(infercnv_obj, cutoff=0.1, out_dir="infercnv",
 
 
 ####Visualization####
-pdf("FigureS1A_dimplot_combined_sample.pdf", height = 8, width = 10)
+pdf("Extended_Data_Fig1b_dimplot_combined_sample.pdf", height = 8, width = 10)
 DimPlot(combined, group.by = "Sample", pt.size = 0.1, cols = brewer.pal(7,"Set3"))
 dev.off()
 
 
-pdf("FigureS1B_dimplot_combined_cluster.pdf", height = 8, width = 10)
+pdf("Extended_Data_Fig1c_dimplot_combined_cluster.pdf", height = 8, width = 10)
 DimPlot(combined, group.by = "new_cluster",  pt.size = 0.1, label.box = T, label = T, 
         label.size = 2, repel = T, cols = c(brewer.pal(12,"Paired"),brewer.pal(12,"Set3")))
 dev.off()
@@ -186,7 +186,7 @@ markers <- c("EPCAM","INSM1","NCAM1","UCHL1","ASCL1","NEUROD1","SFTPB","NAPSA",
            "MYC","VIM","PTPRC","CD3D","CD79A","MZB1","CD14","ACTA2","PECAM1")
 Idents(combined) <- factor(combined$new_cluster, 
                             levels = c(20,1,2,3,4,5,6,7,8,9,10,12,17,24,13,11,15,16,23,21,14,18,19,22))
-pdf("FigureS1C_dotplot_combined_marker.pdf",height = 8,width = 12)
+pdf("Extended_Data_Fig1d_dotplot_combined_marker.pdf",height = 8,width = 12)
 DotPlot(combined, features = rev(markers), dot.scale = 6) +
   coord_flip() +
   scale_colour_gradient(low = "white", high = "#08519C")+
@@ -199,7 +199,7 @@ Idents(combined) <- "new_cluster"
 Cellratio <- prop.table(table(Idents(combined), 
                               factor(combined$Sample, 
                                      levels = rev(levels(combined$Sample)))), margin = 2) %>% as.data.frame()
-pdf("FigureS1E_barplot_combined_cluster_split_by_sample.pdf", height = 5, width = 10)
+pdf("Extended_Data_Fig1f_barplot_combined_cluster_split_by_sample.pdf", height = 5, width = 10)
 ggplot(Cellratio) +
   geom_bar(aes(x=Var2, y=Freq, fill=Var1), stat = "identity", width = 0.8, size=0, colour = 'white') +
   theme_classic() +
@@ -215,7 +215,7 @@ Idents(combined) <- factor(combined$celltype,
 names <- table(combined$celltype) %>% names()
 ratio <- table(combined$celltype) %>% as.numeric()
 pielabel <- paste0(names," (", round(ratio/sum(ratio)*100,2), "%)")
-pdf("FigureS1F_Pieplot_combined_celltype.pdf", height = 5, width = 5)
+pdf("Extended_Data_Fig1g_Pieplot_combined_celltype.pdf", height = 5, width = 5)
 pie3D(ratio,labels = pielabel,explode = 0.2, 
       col = brewer.pal(8,"Paired"), theta = pi/3,
       height = 0.1, labelcex = 0.9)
@@ -247,7 +247,7 @@ Idents(tumor) <- "tumor_cluster"
 
 
 ####Visualization####
-pdf("Figure1A_dimplot_tumor_cluster.pdf", height = 8, width = 10)
+pdf("Fig1a_dimplot_tumor_cluster.pdf", height = 8, width = 10)
 DimPlot(tumor, group.by = "tumor_cluster",  pt.size = 0.2, 
         cols = c(brewer.pal(10,"Paired"), brewer.pal(6, "Set3"), "#004D7A"),
         label.box = T, label = T, label.size = 4, repel = T)
@@ -259,7 +259,7 @@ markers <- c("EPCAM", "INSM1", "NCAM1", "UCHL1", "CALCA",
            "SFTPB", "SFTPC", "HLA-DRA", "SCGB1A1", "SCGB3A1", "NAPSA", 
            "MUC1", "KRT7", "KRT5", "TP63", 
            "CDH1", "VIM", "MYC", "MYCL", "MYCN")
-pdf("Figure1B_dotplot_tumor_marker.pdf",height = 7,width = 8)
+pdf("Fig1b_dotplot_tumor_marker.pdf",height = 7,width = 8)
 DotPlot(tumor, features = rev(markers), dot.scale = 6) +
   coord_flip() +
   scale_colour_gradient(low = "white", high = "#08519C")+
@@ -271,7 +271,7 @@ Idents(tumor) <- "tumor_cluster"
 Cellratio <- prop.table(table(Idents(tumor), 
                               factor(tumor$Sample, levels = rev(levels(tumor$Sample)))), margin = 2) %>%
   as.data.frame()
-pdf("FigureS1G_barplot_tumor_cluster_split_by_sample.pdf", height = 5, width = 8)
+pdf("Extended_Data_Fig1h_barplot_tumor_cluster_split_by_sample.pdf", height = 5, width = 8)
 ggplot(Cellratio) +
   geom_bar(aes(x=Var2, y=Freq, fill=Var1), stat = "identity", width = 0.8, size=0, colour = 'white') +
   theme_classic() +
@@ -335,13 +335,6 @@ top_17 <- top_17[order(top_17$fc, decreasing = T), ]
 n = rss[top_17$path,]
 sorted <- colnames(n)[order(as.numeric(colnames(n)))]
 n_sorted <- n[, sorted]
-pdf("Figure1C_heatmap_topTF_of_tumor_cluster17.pdf", height = 5, width = 5)
+pdf("Fig1c_heatmap_topTF_of_tumor_cluster17.pdf", height = 5, width = 5)
 pheatmap::pheatmap(n_sorted, show_rownames = T, cluster_cols = F, cluster_rows = F, angle_col = "0") 
-dev.off()
-
-
-pdf("Figure1D_vlnplot_tumor_MYC_exp.pdf", height = 6, width = 8)
-VlnPlot(tumor, features = "MYC", pt.size = 0, 
-        cols = c(brewer.pal(10,"Paired"), brewer.pal(6, "Set3"), "#004d7a"))+
-  theme(axis.text.x = element_text(angle = 0, hjust = 0.5, vjust = 1))
 dev.off()

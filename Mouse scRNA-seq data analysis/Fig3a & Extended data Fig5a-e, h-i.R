@@ -607,17 +607,3 @@ save(LUAD_Inter_SCLC,file = "LUAD_Inter_SCLC.Rda")
 AT2_LUAD_Inter_SCLC<-c("AT2","LUAD","Intermediate","SCLC")
 AT2_LUAD_Inter_SCLC<-subset(epi,idents = AT2_LUAD_Inter_SCLC)
 system.time({fwrite(x = as.data.frame(AT2_LUAD_Inter_SCLC[["RNA"]]@counts), row.names=T,file = "AT2_LUAD_Inter_SCLC-7-9-.csv")})
-
-Club_LUAD_Inter_SCLC<-c("Club","LUAD","Intermediate","SCLC")
-Club_LUAD_Inter_SCLC<-subset(epi,idents = Club_LUAD_Inter_SCLC)
-system.time({fwrite(x = as.data.frame(Club_LUAD_Inter_SCLC[["RNA"]]@counts), row.names=T,file = "Club_LUAD_Inter_SCLC-3-16.csv")})
-
-system.time({fwrite(x = as.data.frame(epi[["RNA"]]@counts), row.names=T,file = "epi-3-19.csv")})
-table(epi$celltype)
-Ciliated_Club_LUAD_Inter_SCLC<-c("Ciliated","Club","LUAD","Intermediate","SCLC")
-Ciliated_Club_LUAD_Inter_SCLC<-subset(epi,idents = Ciliated_Club_LUAD_Inter_SCLC)
-system.time({fwrite(x = as.data.frame(Ciliated_Club_LUAD_Inter_SCLC[["RNA"]]@counts), row.names=T,file = "Ciliated_Club_LUAD_Inter_SCLC-3-20.csv")})
-
-LUAD_Inter_SCLC<-c("LUAD","Intermediate","SCLC")
-LUAD_Inter_SCLC<-subset(epi,idents = LUAD_Inter_SCLC)
-system.time({fwrite(x = as.data.frame(LUAD_Inter_SCLC[["RNA"]]@counts), row.names=T,file = "LUAD_Inter_SCLC-3-20.csv")})

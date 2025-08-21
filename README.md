@@ -6,17 +6,21 @@ This repository contains the code used to process and visualize single-cell RNA 
 **1. Human scRNA-seq data analysis**
 
 **Fig1 & Extended data Fig1.R**
+
 This R script contains the code used to generate Fig. 1 and Extended Data Fig. 1, including: preprocessing of scRNA-seq data from human SCLC clinical samples; copy number variation analysis with inferCNV; UMAP visualization of all cells and tumor subsets; bubble plot visualization of selected gene expression; proportion analysis of clusters and cell types; and preprocessing/visualization for pySCENIC transcription factor analysis. 
 
 **pyscenic analysis--Fig1c.sh**
+
 This script provides a standard pySCENIC workflow for transcription factor analysis, following the official tutorial (https://pyscenic.readthedocs.io/en/latest/installation.html). 
 
 **2. Mouse scRNA-seq data analysis**
 
 **Seurat analysis--Fig3a & Extended data Fig5a-e, h-i.R**
+
 This R script reproduces Fig. 3a and Extended data Fig. 5a-e, h, including preprocessing of scRNA-seq data from 2 KPM tumors, copy number variation analysis using the inferCNV package, UMAP visualization of all and tumor cells, Bubble plot visualization of selected gene expression, cluster and cell-type proportion analysis, GSVA of hallmark signatures enriched in each tumor cell cluster, and preprocessing/visualization for pySCENIC transcription factor analysis. 
 
 **Scanpy analysis--Fig3b-d, Extended data Fig5f-g & Extended data Fig10a.ipynb**
+
 This Python script reproduces Fig. 3b-d, Extended data Fig. 5f-g, and Extended data Fig. 10a, including preprocessing of tumor cell scRNA-seq data defined by Seurat, and CellRank analysis to infer pseudotime ordering and expression dynamics of selected genes. 
 
 

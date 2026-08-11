@@ -7,6 +7,7 @@ library(ggplot2)
 library(plotrix)
 library(SCENIC)
 library(SCopeLoomR)
+library(monocle3)
 
 
 ####Data preprocessing and quality control####
@@ -170,13 +171,13 @@ infercnv_obj = infercnv::run(infercnv_obj, cutoff=0.1, out_dir="infercnv",
                              cluster_by_groups=TRUE, denoise=T, HMM=T)
 
 
-####Visualization####
-pdf("Extended_Data_Fig1b_dimplot_combined_sample.pdf", height = 8, width = 10)
+####Combined cells visualization####
+pdf("FigureS1b_dimplot_combined_sample.pdf", height = 8, width = 10)
 DimPlot(combined, group.by = "Sample", pt.size = 0.1, cols = brewer.pal(7,"Set3"))
 dev.off()
 
 
-pdf("Extended_Data_Fig1c_dimplot_combined_cluster.pdf", height = 8, width = 10)
+pdf("FigureS1c_dimplot_combined_cluster.pdf", height = 8, width = 10)
 DimPlot(combined, group.by = "new_cluster",  pt.size = 0.1, label.box = T, label = T, 
         label.size = 2, repel = T, cols = c(brewer.pal(12,"Paired"),brewer.pal(12,"Set3")))
 dev.off()
@@ -186,7 +187,7 @@ markers <- c("EPCAM","INSM1","NCAM1","UCHL1","ASCL1","NEUROD1","SFTPB","NAPSA",
            "MYC","VIM","PTPRC","CD3D","CD79A","MZB1","CD14","ACTA2","PECAM1")
 Idents(combined) <- factor(combined$new_cluster, 
                             levels = c(20,1,2,3,4,5,6,7,8,9,10,12,17,24,13,11,15,16,23,21,14,18,19,22))
-pdf("Extended_Data_Fig1d_dotplot_combined_marker.pdf",height = 8,width = 12)
+pdf("FigureS1d_dotplot_combined_marker.pdf",height = 8,width = 12)
 DotPlot(combined, features = rev(markers), dot.scale = 6) +
   coord_flip() +
   scale_colour_gradient(low = "white", high = "#08519C")+
@@ -199,7 +200,7 @@ Idents(combined) <- "new_cluster"
 Cellratio <- prop.table(table(Idents(combined), 
                               factor(combined$Sample, 
                                      levels = rev(levels(combined$Sample)))), margin = 2) %>% as.data.frame()
-pdf("Extended_Data_Fig1f_barplot_combined_cluster_split_by_sample.pdf", height = 5, width = 10)
+pdf("FigureS1f_barplot_combined_cluster_split_by_sample.pdf", height = 5, width = 10)
 ggplot(Cellratio) +
   geom_bar(aes(x=Var2, y=Freq, fill=Var1), stat = "identity", width = 0.8, size=0, colour = 'white') +
   theme_classic() +
@@ -215,7 +216,7 @@ Idents(combined) <- factor(combined$celltype,
 names <- table(combined$celltype) %>% names()
 ratio <- table(combined$celltype) %>% as.numeric()
 pielabel <- paste0(names," (", round(ratio/sum(ratio)*100,2), "%)")
-pdf("Extended_Data_Fig1g_Pieplot_combined_celltype.pdf", height = 5, width = 5)
+pdf("FigureS1g_Pieplot_combined_celltype.pdf", height = 5, width = 5)
 pie3D(ratio,labels = pielabel,explode = 0.2, 
       col = brewer.pal(8,"Paired"), theta = pi/3,
       height = 0.1, labelcex = 0.9)
@@ -246,8 +247,8 @@ tumor$tumor_cluster <- factor(tumor$tumor_cluster, levels = c(1:17))
 Idents(tumor) <- "tumor_cluster"
 
 
-####Visualization####
-pdf("Fig1a_dimplot_tumor_cluster.pdf", height = 8, width = 10)
+####Tumor cells visualization####
+pdf("Figure1b_dimplot_tumor_cluster.pdf", height = 8, width = 10)
 DimPlot(tumor, group.by = "tumor_cluster",  pt.size = 0.2, 
         cols = c(brewer.pal(10,"Paired"), brewer.pal(6, "Set3"), "#004D7A"),
         label.box = T, label = T, label.size = 4, repel = T)
@@ -259,7 +260,7 @@ markers <- c("EPCAM", "INSM1", "NCAM1", "UCHL1", "CALCA",
            "SFTPB", "SFTPC", "HLA-DRA", "SCGB1A1", "SCGB3A1", "NAPSA", 
            "MUC1", "KRT7", "KRT5", "TP63", 
            "CDH1", "VIM", "MYC", "MYCL", "MYCN")
-pdf("Fig1b_dotplot_tumor_marker.pdf",height = 7,width = 8)
+pdf("Figure1c_dotplot_tumor_marker.pdf",height = 7,width = 8)
 DotPlot(tumor, features = rev(markers), dot.scale = 6) +
   coord_flip() +
   scale_colour_gradient(low = "white", high = "#08519C")+
@@ -271,7 +272,7 @@ Idents(tumor) <- "tumor_cluster"
 Cellratio <- prop.table(table(Idents(tumor), 
                               factor(tumor$Sample, levels = rev(levels(tumor$Sample)))), margin = 2) %>%
   as.data.frame()
-pdf("Extended_Data_Fig1h_barplot_tumor_cluster_split_by_sample.pdf", height = 5, width = 8)
+pdf("FigureS1h_barplot_tumor_cluster_split_by_sample.pdf", height = 5, width = 8)
 ggplot(Cellratio) +
   geom_bar(aes(x=Var2, y=Freq, fill=Var1), stat = "identity", width = 0.8, size=0, colour = 'white') +
   theme_classic() +
@@ -279,6 +280,46 @@ ggplot(Cellratio) +
   scale_fill_manual(values = c(brewer.pal(10,"Paired"), brewer.pal(6, "Set3"), "#004D7A"))+
   coord_flip() +
   theme(panel.border = element_rect(fill = NA, color="black", size = 0.5, linetype="solid"))
+dev.off()
+
+
+meta <- tumor@meta.data
+cluster17_cells <- meta %>% filter(tumor_cluster == 17)
+sample_order <- c("LC-250","LC-251","LC-254","LC-255","LC-51","LC-270","LC-242")
+cluster17_ratio <- cluster17_cells %>%
+  group_by(Sample) %>%
+  summarise(count = n()) %>%
+  right_join(data.frame(Sample = sample_order), by = "Sample") %>%
+  mutate(count = ifelse(is.na(count), 0, count)) %>%
+  mutate(proportion = count / sum(count)) %>%
+  mutate(Sample = factor(Sample, levels = sample_order))
+pdf("FigureS1i_Barplot_cluster17_distribution.pdf",height = 5,width = 3)
+ggplot(cluster17_ratio, aes(x = 1, y = proportion, fill = Sample)) +
+  geom_bar(stat = "identity", width = 0.5) +
+  geom_text(aes(label = count), 
+            position = position_stack(vjust = 0.5), size = 4) +
+  ylab("Proportion of cluster17 cells") +
+  xlab("") +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1)) +
+  scale_fill_brewer(palette = "Set3") +
+  theme_classic() +
+  theme(axis.text.x = element_blank(),
+        axis.ticks.x = element_blank(),
+        legend.title = element_blank())
+dev.off()
+
+
+cluster17_cells <- subset(tumor, idents = 17)
+pdf("FigureS1j_vlnplot_MYC_exp_in_cluster17.pdf",height = 4,width = 5)
+VlnPlot(
+  cluster17_cells, 
+  features = "MYC", 
+  group.by = "Sample",
+  pt.size = 0.2, 
+  cols = RColorBrewer::brewer.pal(7, "Set3")
+) + 
+  theme_classic() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
 dev.off()
 
 
@@ -335,6 +376,33 @@ top_17 <- top_17[order(top_17$fc, decreasing = T), ]
 n = rss[top_17$path,]
 sorted <- colnames(n)[order(as.numeric(colnames(n)))]
 n_sorted <- n[, sorted]
-pdf("Fig1c_heatmap_topTF_of_tumor_cluster17.pdf", height = 5, width = 5)
+pdf("Figure1e_heatmap_topTF_of_tumor_cluster17.pdf", height = 5, width = 5)
 pheatmap::pheatmap(n_sorted, show_rownames = T, cluster_cols = F, cluster_rows = F, angle_col = "0") 
+dev.off()
+
+
+####Tumor cells trajectory analysis####
+data <- GetAssayData(tumor, assay = 'RNA', slot = 'counts')
+cell_metadata <- tumor@meta.data
+gene_annotation <- data.frame(gene_short_name = rownames(data))
+rownames(gene_annotation) <- rownames(data)
+cds <- new_cell_data_set(data,
+                         cell_metadata = cell_metadata,
+                         gene_metadata = gene_annotation)
+
+cds <- preprocess_cds(cds, num_dim = 50)
+cds <- reduce_dimension(cds,preprocess_method = "PCA")
+plot_cells(cds)
+cds <- cluster_cells(cds)
+
+cds@int_colData$reducedDims$UMAP <- tumor@reductions$umap@cell.embeddings
+cds@clusters$UMAP$clusters <- tumor@meta.data$tumor_cluster
+names(cds@clusters$UMAP$clusters) <- rownames(tumor@meta.data)
+
+cds <- learn_graph(cds,use_partition = F)
+cds <- order_cells(cds)
+pdf("Figure1d_pseudotime_analysis_of_tumor_cells.pdf", height = 8, width = 11)
+plot_cells(cds, color_cells_by = "pseudotime", label_cell_groups = FALSE, trajectory_graph_segment_size = 0.8,
+           cell_size = 0.3, alpha = 0.8, label_leaves = F, label_branch_points = F) +
+  scale_color_paletteer_c(name = "Pseudotime","viridis::mako") 
 dev.off()

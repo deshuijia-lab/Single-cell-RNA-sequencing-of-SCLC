@@ -1,5 +1,5 @@
 # Single-cell-and-spatial-transcriptomic-analysis-of-SCLC
-This repository contains the code used to process and visualize single-cell RNA sequencing (scRNA-seq) and Xenium spatial transcriptomic data for the study by Pan et al., "MYC drives neuroendocrine transformation of adenocarcinoma into RB1-proficient small cell lung cancer." In this work, scRNA-seq was performed using the 10x Genomics Chromium platform on both human small cell lung cancer (SCLC) samples and primary lung tumors from KPM mice, and Xenium spatial transcriptomics was performed on human combined SCLC/LUAD tumor sections. The code supports key analyses including scRNA-seq quality control, cell type annotation and proportion analysis, transcription factor activity analysis, and pseudotime trajectory reconstruction, as well as Xenium-based spatial cell-type annotation, epithelial lineage subtyping, and single-molecule-resolution transcript mapping.
+This repository contains the code used to process and visualize single-cell RNA sequencing (scRNA-seq) and Xenium spatial transcriptomic data for the study by Pan et al., "MYC drives neuroendocrine transformation of adenocarcinoma into RB1-proficient small cell lung cancer." In this work, scRNA-seq was performed using the 10x Genomics Chromium platform on 7 human small cell lung cancer (SCLC) samples and 2 primary lung tumors from KPM mice, and Xenium spatial transcriptomics was performed on 7 human combined SCLC/LUAD and 1 human transformed SCLC tumor sections. The code supports key analyses including scRNA-seq quality control, cell type annotation and proportion analysis, transcription factor activity analysis, and pseudotime trajectory reconstruction, as well as Xenium-based spatial cell-type annotation, epithelial lineage subtyping, and single-molecule-resolution transcript mapping.
 
 # Contents of repository
 
@@ -27,7 +27,7 @@ This Python script reproduces Fig. 3b-d, Extended data Fig. 7f-g, and Extended d
 
 **Fig1f-k & Extended data Fig3.R**
 
-This R script reproduces Fig. 1f-k and Extended data Fig. 3, including: loading and sample assignment of 10x Xenium data from human combined SCLC/LUAD tumor sections; data sketching and Harmony-based sample integration; cell-type annotation and epithelial subtype classification; spatial and UMAP visualization of cell types; and spatial mapping of marker gene expression at single-molecule resolution.
+This R script reproduces Fig. 1f-k and Extended data Fig. 3, including: loading and sample assignment of 10x Xenium data from human combined SCLC/LUAD and transformed SCLC tumor sections; data sketching and Harmony-based sample integration; cell-type annotation and epithelial subtype classification; spatial and UMAP visualization of cell types; and spatial mapping of marker gene expression at single-molecule resolution.
 
 # Data availability
 The raw and processed scRNA-seq data generated in this study is available in the Genome Sequence Archive (GSA) database under accession number HRA008577 and CRA019000. 

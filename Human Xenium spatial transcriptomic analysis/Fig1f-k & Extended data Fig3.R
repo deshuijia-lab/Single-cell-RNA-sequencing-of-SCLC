@@ -84,19 +84,27 @@ xenium.obj$celltype <- factor(xenium.obj$celltype,
 
 
 #epithelial subtype
+sclc.markers <- c("ASCL1", "NEUROD1", "POU2F3", "INSM1", "UCHL1", "SYP")
+luad.markers <- c("MUC1", "NKX2-1")
+
 epi.cells <- WhichCells(xenium.obj, expression = celltype == "Epithelial")
-expr <- FetchData(xenium.obj,
-                  vars = c("INSM1", "UCHL1", "SYP", "MUC1", "NKX2-1"),
-                  cells = epi.cells)
-is_sclc <- (expr$INSM1 > 0 | expr$UCHL1 > 0 | expr$SYP > 0) & expr$MUC1 == 0
-is_luad <- (expr[["NKX2-1"]] > 0 | expr$MUC1 > 0) & expr$INSM1 == 0 & expr$UCHL1 == 0 & expr$SYP == 0
-is_hybrid <- (expr$INSM1 > 0 | expr$UCHL1 > 0 | expr$SYP > 0) & expr$MUC1 > 0
+expr <- FetchData(xenium.obj, vars = c(sclc.markers, luad.markers), cells = epi.cells)
+cell.ids <- rownames(expr)
+
+sclc.pos <- rowSums(expr[, sclc.markers, drop = FALSE] > 0) >= 1
+luad.pos <- rowSums(expr[, luad.markers, drop = FALSE] > 0) >= 1
+muc1.pos <- expr$MUC1 > 0
+
+hybrid.cells <- cell.ids[sclc.pos & muc1.pos]
+sclc.cells   <- cell.ids[sclc.pos & !muc1.pos]
+luad.cells   <- cell.ids[!sclc.pos & luad.pos]
+other.epi.cells <- setdiff(epi.cells, c(sclc.cells, luad.cells, hybrid.cells))
 
 xenium.obj$celltype2 <- as.character(xenium.obj$celltype)
-xenium.obj$celltype2[epi.cells[is_sclc]] <- "SCLC"
-xenium.obj$celltype2[epi.cells[is_luad]] <- "LUAD"
-xenium.obj$celltype2[epi.cells[is_hybrid]] <- "SCLC/LUAD"
-xenium.obj$celltype2[setdiff(epi.cells, epi.cells[is_sclc | is_luad | is_hybrid])] <- "Other epithelial"
+xenium.obj$celltype2[colnames(xenium.obj) %in% sclc.cells]    <- "SCLC"
+xenium.obj$celltype2[colnames(xenium.obj) %in% luad.cells]    <- "LUAD"
+xenium.obj$celltype2[colnames(xenium.obj) %in% hybrid.cells]  <- "SCLC/LUAD"
+xenium.obj$celltype2[colnames(xenium.obj) %in% other.epi.cells] <- "Other epithelial"
 xenium.obj$celltype2 <- factor(xenium.obj$celltype2,
                                levels = c("LUAD", "SCLC/LUAD", "SCLC", "Other epithelial",
                                           "Myeloid", "T", "B", "Plasma", "Fibroblast", "Endothelial", "Unknown"))
